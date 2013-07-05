@@ -129,6 +129,8 @@ HTTP.ServerResponse.prototype.intercept = function(callback) {
 		}
 	};
 
+	self.intercepted = true;
+
 	if(callback) {
 		self.on("interception", callback);
 	}
