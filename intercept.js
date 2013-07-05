@@ -28,6 +28,9 @@ HTTP.IncomingMessage.prototype.intercept = function(callback) {
 				// Give observers the opportunity to change things:
 				original.call(self, "interception", interception);
 
+				// Adjust "content-length" header accordingly to buffer's contents:
+				self.headers["content-length"] = (interception.buffer || "").length;
+
 				original.call(self, "data", interception.buffer);
 			}
 			catch(exception) {
