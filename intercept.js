@@ -16,11 +16,11 @@ HTTP.IncomingMessage.prototype.intercept = function(callback) {
 	};
 
 	self.emit = Utility.wrap(self.emit, function(original, event) {
-		if(event == "data") {
+		if(event === "data") {
 			var chunk = arguments[2];
 			buffer = Buffer.concat([buffer, Buffer.isBuffer(chunk) ? new Buffer(chunk) : chunk]);
 		}
-		else if(event == "end") {
+		else if(event === "end") {
 			interception.buffer = new Buffer(buffer.length);
 			buffer.copy(interception.buffer);
 
@@ -78,7 +78,7 @@ HTTP.ServerResponse.prototype.intercept = function(callback) {
 	self.writeHead = function(statusCode/*, reasonPhrase, headers*/) {
 		self.statusCode = statusCode;
 
-		var reasonIsPresent = (typeof arguments[1] == "string");
+		var reasonIsPresent = (typeof arguments[1] === "string");
 		interception.reasonPhrase = reasonIsPresent ? arguments[1] : "";
 
 		var headers = reasonIsPresent ? arguments[2] : arguments[1];

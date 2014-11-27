@@ -1,10 +1,10 @@
 # Usage
 
-Approach is pretty simple: just call the `intercept` method on some request or response and register for its "`interception`" event (or just pass your callback when calling `intercept`).
+Approach is pretty simple: just call the `intercept` method on either request or response and register for the "`interception`" event (or just pass your callback when calling `intercept`).
 When it is triggered you'll get the intercepted data. At that point you could do whatever you want with it, then normal flow of things will resume...
 
 
-## Modifying request's data:
+## Modifying Request Data
 Let's say you want to change incoming data:
 
 ```
@@ -20,16 +20,15 @@ var server = HTTP.createServer(function(request, response) {
 //*/
 
 	request.pipe(read(function(data) {
-		var query = Query.parse("" + data || "");
+		var query = Query.parse(String(data) || "");
 		response.end("Hello, " + query.user + "!");
 	}));
 }).listen(80);
-};
 ```
-+Note+: post something like "user=Barnabé" with a REST client and you'll see that name turned into "Jack" in the greeting message.
+<u>Note</u>: post something like "user=Barnabé" and you'll see that it is turned into "Jack" in the greeting message.
 
 
-## Modifying response's data:
+## Modifying Response Data
 
 ```
 var HTTP = require("http");
@@ -40,7 +39,7 @@ var server = HTTP.createServer(function(request, response) {
 	var user;
 //*
 	request.intercept(function(context) {
-		user = Query.parse("" + context.buffer || "").user;
+		user = Query.parse(String(context.buffer) || "").user;
 		context.buffer = "user=Jack";
 	});
 //*/
@@ -54,7 +53,7 @@ var server = HTTP.createServer(function(request, response) {
 	var query;
 
 	request.pipe(read(function(data) {
-		query = Query.parse("" + data || "");
+		query = Query.parse(String(data) || "");
 		response.end("Hello, " + query.user + "!");
 	}));
 }).listen(80);
